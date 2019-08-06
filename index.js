@@ -37,19 +37,20 @@ server.get('/api/users/:id', (req, res) => {
 
 server.post('/api/users', (req, res) => {
     
+    const UserInfo = req.body;
     const { name, bio} = req.body;
-   const UserInfo = req.body;
-    UserData.insert(UserInfo)
+
+    if (name || bio) {
+        UserData.insert(UserInfo)
         .then(UserInfo => {
-             if (name || bio) {
             res.status(201).json(UserInfo);
-            } else {
-                res.status(400).json({ errorMessage: "Please provide name and bio for the user." });
-            } 
         })
         .catch(error => {
             res.status(500).json({ error: "There was an error while saving the user to the database" })
         })
+        } else {
+            res.status(400).json({ errorMessage: "Please provide name and bio for the user." });
+        } 
 });
 
 server.put('/api/users/:id', (req, res) => {
